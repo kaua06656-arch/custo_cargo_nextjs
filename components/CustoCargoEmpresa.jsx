@@ -1,5 +1,6 @@
+'use client';
 import React, { useState, useMemo } from 'react';
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { motion } from 'framer-motion';
 
 function money(x) {
@@ -9,105 +10,203 @@ function money(x) {
 const ENCARGOS = [
   { nome: 'INSS', pct: 0.20, cor: '#6366f1', icon: '🏥' },
   { nome: 'RAT', pct: 0.02, cor: '#3b82f6', icon: '⚠️' },
-  { nome: 'S.Educacao', pct: 0.025, cor: '#0ea5e9', icon: '📚' },
-  { nome: 'S.S', pct: 0.033, cor: '#06b6d4', icon: '🏢' },
-  { nome: 'FGTS', pct: 0.08, cor: '#14b8a6', icon: '💰' },
-  { nome: 'Multa', pct: 0.032, cor: '#10b981', icon: '📋' },
+  { nome: 'S.Educacao', pct: 0.025, cor: '#06b6d4', icon: '📚' },
+  { nome: 'S.S', pct: 0.033, cor: '#10b981', icon: '🏢' },
+  { nome: 'FGTS', pct: 0.08, cor: '#f59e0b', icon: '💰' },
+  { nome: 'Multa', pct: 0.032, cor: '#ef4444', icon: '📋' },
 ];
 
 export default function CustoCargoEmpresa() {
   const [salario, setSalario] = useState(5000);
-  const breakdown = useMemo(() => {
-    const sal = Number(salario || 0);
-    const enc = ENCARGOS.reduce((s,e) => s + sal*e.pct, 0);
-    const dec13 = sal/12, ferias = sal*4/36;
-    const total = sal + enc + dec13 + ferias;
-    return {sal, enc, dec13, ferias, total, pct: ((total-sal)/sal)*100};
+
+  const custos = useMemo(() => {
+    const encargosTotal = ENCARGOS.reduce((acc, e) => acc + e.pct, 0);
+    const custoEncargos = salario * encargosTotal;
+    const custoFerias = (salario + custoEncargos) / 12;
+    const custo13 = (salario + custoEncargos) / 12;
+    const custoTotal = salario + custoEncargos + custoFerias + custo13;
+
+    return {
+      encargosTotal,
+      custoEncargos,
+      custoFerias,
+      custo13,
+      custoTotal,
+      aumento: ((custoTotal - salario) / salario * 100).toFixed(1),
+    };
   }, [salario]);
 
+  const encargosDetalhados = ENCARGOS.map((e) => ({
+    ...e,
+    value: salario * e.pct,
+  }));
+
+  const chartData = [
+    { name: 'Salário', value: salario, fill: '#a855f7' },
+    { name: 'Encargos', value: custos.custoEncargos, fill: '#ec4899' },
+    { name: '13º+Férias', value: custos.custoFerias + custos.custo13, fill: '#f59e0b' },
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-4 sm:p-8">
-      <motion.div initial={{opacity:0}} animate={{opacity:1}} className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-black bg-gradient-to-r from-indigo-600 to-pink-600 bg-clip-text text-transparent mb-2">💼 Custo do Cargo</h1>
-          <p className="text-gray-600 text-lg">Calculadora profissional de encargos trabalhistas brasileiros</p>
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-purple-100 p-8">
+      {/* Logo UNIFSA */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="flex justify-center mb-8"
+      >
+        <div className="text-center">
+          <img
+            src="https://unifsa.com.br/static/images/logo-unifsa.png"
+            alt="Logo UNIFSA"
+            className="h-20 mx-auto mb-4 drop-shadow-lg"
+          />
+          <p className="text-sm text-gray-600 font-medium">Centro Universitário Santo Agostinho</p>
         </div>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          {/* INPUT */}
-          <motion.div className="lg:col-span-1 bg-white rounded-2xl p-8 shadow-lg border-l-4 border-indigo-500">
-            <label className="block text-sm font-bold text-gray-700 mb-4">💰 Salario Base (R$)</label>
-            <input type="number" value={salario} onChange={(e)=>setSalario(e.target.value)} className="w-full text-3xl font-bold text-indigo-600 border-2 border-indigo-200 rounded-lg p-3 focus:border-indigo-500 outline-none" />
-            <div className="mt-6 p-4 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-lg">
-              <p className="text-xs font-semibold text-indigo-900 uppercase">Arraste ou digite</p>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="text-center mb-12"
+      >
+        <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 mb-2">
+          💼 Custo do Cargo
+        </h1>
+        <p className="text-gray-600 text-lg">Calculadora profissional de encargos trabalhistas brasileiros</p>
+      </motion.div>
+
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        {/* Input */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          className="lg:col-span-1 bg-white rounded-2xl p-8 shadow-xl border-l-4 border-blue-500"
+        >
+          <label className="block text-2xl font-bold text-gray-800 mb-6">💰 Salario Base (R$)</label>
+          <input
+            type="number"
+            value={salario}
+            onChange={(e) => setSalario(Number(e.target.value))}
+            className="w-full px-6 py-4 text-2xl font-bold text-blue-600 border-2 border-blue-300 rounded-xl focus:outline-none focus:border-blue-500 transition"
+          />
+          <p className="text-center text-gray-500 mt-4 text-sm">ARRASTE OU DIGITE</p>
+        </motion.div>
+
+        {/* Total */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          className="lg:col-span-2 bg-gradient-to-br from-purple-500 via-pink-500 to-purple-600 rounded-2xl p-8 shadow-2xl text-white"
+        >
+          <div className="flex justify-between items-start mb-6">
+            <h2 className="text-2xl font-bold">CUSTO TOTAL MENSAL</h2>
+            <div className="text-right">
+              <p className="text-sm font-medium opacity-80">Acrescimo</p>
+              <p className="text-4xl font-bold">{custos.aumento}%</p>
             </div>
-          </motion.div>
-          
-          {/* RESULTADO PRINCIPAL */}
-          <motion.div className="lg:col-span-2 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl p-8 text-white shadow-2xl">
-            <div className="flex justify-between items-start mb-6">
-              <div>
-                <p className="text-sm opacity-90 font-semibold">CUSTO TOTAL MENSAL</p>
-                <h2 className="text-5xl font-black mt-2">{money(breakdown.total)}</h2>
-              </div>
-              <div className="text-right bg-white/20 backdrop-blur px-4 py-2 rounded-lg">
-                <p className="text-xs opacity-90">Acrescimo</p>
-                <p className="text-3xl font-bold">{breakdown.pct.toFixed(1)}%</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-3 gap-2 text-sm">
-              <div className="bg-white/10 p-2 rounded"><strong>{money(breakdown.sal)}</strong><br/>Salario</div>
-              <div className="bg-white/10 p-2 rounded"><strong>{money(breakdown.enc)}</strong><br/>Encargos</div>
-              <div className="bg-white/10 p-2 rounded"><strong>{money(breakdown.dec13+breakdown.ferias)}</strong><br/>13o+Ferias</div>
-            </div>
-          </motion.div>
-        </div>
-        
-        {/* CARDS DOS ENCARGOS */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
-          {ENCARGOS.map((e,i) => (
-            <motion.div key={i} initial={{y:20, opacity:0}} animate={{y:0,opacity:1}} transition={{delay:i*0.05}} className="bg-white rounded-lg p-4 shadow-md border-t-4" style={{borderColor:e.cor}}>
-              <div className="text-2xl mb-2">{e.icon}</div>
-              <p className="font-bold text-sm">{e.nome}</p>
-              <p className="text-xs text-gray-600 mb-2">{(e.pct*100).toFixed(1)}%</p>
-              <p className="text-lg font-black" style={{color:e.cor}}>{money(breakdown.sal * e.pct)}</p>
-            </motion.div>
-          ))}
-        </div>
-        
-        {/* GRAFICO PIE */}
-        <motion.div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <div className="bg-white rounded-2xl p-6 shadow-lg">
-            <h3 className="font-bold text-lg mb-4 text-gray-800">Composicao do Custo</h3>
-            <ResponsiveContainer width="100%" height={250}>
-              <PieChart>
-                <Pie data={[{name:'Sal',val:breakdown.sal},{name:'Enc',val:breakdown.enc},{name:'13F',val:breakdown.dec13+breakdown.ferias}]} dataKey="val">
-                  <Cell fill="#8b5cf6"/><Cell fill="#ec4899"/><Cell fill="#f59e0b"/>
-                </Pie>
-                <Tooltip formatter={v=>money(v)}/>
-              </PieChart>
-            </ResponsiveContainer>
           </div>
-          
-          <div className="bg-white rounded-2xl p-6 shadow-lg">
-            <h3 className="font-bold text-lg mb-4 text-gray-800">Info Legal</h3>
-            <div className="text-sm text-gray-700 space-y-2">
-              <p><strong>Base Legal:</strong></p>
-              <ul className="text-xs space-y-1">
-                <li>✓ CLT - Consolidacao Leis Trabalho</li>
-                <li>✓ Lei 8.212/91 - Contrib Previdenciaria</li>
-                <li>✓ Lei 8.213/91 - Beneficios</li>
-                <li>✓ Lei 8.036/90 - FGTS</li>
-                <li>✓ EC 103/2019 - Reforma Previdencia</li>
-              </ul>
+          <h3 className="text-5xl font-bold mb-6">{money(custos.custoTotal)}</h3>
+          <div className="grid grid-cols-3 gap-4">
+            <div className="bg-white bg-opacity-20 rounded-lg p-4">
+              <p className="text-sm opacity-80">Salario</p>
+              <p className="text-2xl font-bold">{money(salario)}</p>
+            </div>
+            <div className="bg-white bg-opacity-20 rounded-lg p-4">
+              <p className="text-sm opacity-80">Encargos</p>
+              <p className="text-2xl font-bold">{money(custos.custoEncargos)}</p>
+            </div>
+            <div className="bg-white bg-opacity-20 rounded-lg p-4">
+              <p className="text-sm opacity-80">13o+Ferias</p>
+              <p className="text-2xl font-bold">{money(custos.custoFerias + custos.custo13)}</p>
             </div>
           </div>
         </motion.div>
-        
-        <div className="text-center text-xs text-gray-500 py-6">
-          Calculadora desenvolvida para projeto academico | Valores para fins educacionais
-        </div>
+      </div>
+
+      {/* Cards de Encargos */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, staggerChildren: 0.1 }}
+        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8 max-w-6xl mx-auto"
+      >
+        {encargosDetalhados.map((encargo, idx) => (
+          <motion.div
+            key={idx}
+            whileHover={{ y: -5, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.15)' }}
+            className="rounded-xl p-6 text-center shadow-lg border border-opacity-30"
+            style={{
+              background: `linear-gradient(135deg, ${encargo.cor}22, ${encargo.cor})`,
+              borderColor: encargo.cor,
+            }}
+          >
+            <p className="text-4xl mb-3">{encargo.icon}</p>
+            <p className="text-sm font-bold uppercase tracking-wide text-gray-700">{encargo.nome}</p>
+            <p className="text-xs font-semibold mt-1 opacity-90 text-gray-600">{(encargo.pct * 100).toFixed(1)}%</p>
+            <p className="text-xl font-bold mt-3" style={{ color: encargo.cor }}>
+              {money(encargo.value)}
+            </p>
+          </motion.div>
+        ))}
       </motion.div>
+
+      {/* Charts e Info */}
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Pie Chart */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+          className="bg-white rounded-2xl p-8 shadow-xl"
+        >
+          <h3 className="text-2xl font-bold text-gray-800 mb-6">Composicao do Custo</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Pie
+                data={chartData}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                outerRadius={80}
+                fill="#8884d8"
+                dataKey="value"
+              >
+                {chartData.map((entry, idx) => (
+                  <Cell key={`cell-${idx}`} fill={entry.fill} />
+                ))}
+              </Pie>
+              <Tooltip formatter={(value) => money(value)} />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </motion.div>
+
+        {/* Info Legal */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+          className="bg-white rounded-2xl p-8 shadow-xl"
+        >
+          <h3 className="text-2xl font-bold text-gray-800 mb-6">Info Legal</h3>
+          <p className="text-gray-700 font-semibold mb-4">Base Legal:</p>
+          <ul className="space-y-3 text-gray-600 text-sm">
+            <li>✓ CLT - Consolidacao Leis Trabalho</li>
+            <li>✓ Lei 8.212/91 - Contrib Previdenciaria</li>
+            <li>✓ Lei 8.213/91 - Beneficios</li>
+            <li>✓ Lei 8.036/90 - FGTS</li>
+            <li>✓ EC 103/2019 - Reforma Previdencia</li>
+          </ul>
+        </motion.div>
+      </div>
+
+      <p className="text-center text-gray-500 text-xs mt-12">Calculadora desenvolvida para projeto academico | Valores para fins educacionais</p>
     </div>
   );
 }
