@@ -49,23 +49,13 @@ export default function CustoCargoEmpresa() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-purple-100 p-8">
-      {/* Logo UNIFSA */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="flex justify-center mb-8"
-      >
-        <div className="text-center">
-          <img
-            src="https://unifsa.com.br/static/images/logo-unifsa.png"
-            alt="Logo UNIFSA"
-            className="h-20 mx-auto mb-4 drop-shadow-lg"
-          />
-          <p className="text-sm text-gray-600 font-medium">Centro Universitário Santo Agostinho</p>
+      {/* UNIFSA Badge */}
+      <div className="text-center py-6">
+        <div className="inline-block bg-gradient-to-r from-green-500 to-blue-600 px-6 py-2 rounded-full text-white font-bold text-sm shadow-lg mb-4">
+          🎓 UNIFSA
         </div>
-      </motion.div>
-
+        <p className="text-xs text-gray-500">Centro Universitário Santo Agostinho</p>
+      </div>
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
