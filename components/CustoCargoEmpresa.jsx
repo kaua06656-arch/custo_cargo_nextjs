@@ -106,7 +106,7 @@ export default function CustoCargoEmpresa() {
             <div className="bg-gradient-to-br from-purple-600 to-purple-700 rounded-xl p-4 sm:p-6 shadow-lg text-white">
               <p className="text-xs sm:text-sm opacity-90 mb-1">CUSTO TOTAL MENSAL</p>
               <h2 className="text-2xl sm:text-4xl font-bold mb-3 sm:mb-4">{formatarMoeda(custos.custoTotal)}</h2>
-              <div className="grid grid-cols-3 gap-2 sm:gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3">
                 <div className="bg-white bg-opacity-20 rounded-lg p-2 sm:p-3">
                   <p className="text-xs opacity-80">Salario</p>
                   <p className="font-bold text-sm sm:text-base">{formatarMoeda(custos.salario)}</p>
@@ -127,7 +127,7 @@ export default function CustoCargoEmpresa() {
 
         {/* Tab: Detalhes */}
         {activeTab === 'detalhes' && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3">
             {ENCARGOS.map((encargo) => {
               const valor = custos[`custo${encargo.nome.replace('.', '')}`];
               const percentualReal = (valor / custos.custoTotal) * 100;
