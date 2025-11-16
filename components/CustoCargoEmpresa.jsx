@@ -169,6 +169,33 @@ export default function CustoCargoEmpresa() {
         )}
       </div>
     </div>
+
+          <div className="px-3 sm:px-6 lg:px-8 xl:px-10 py-8 bg-gradient-to-r from-purple-50 to-blue-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Seção Grupo */}
+            <div className="space-y-3">
+              <h3 className="text-lg sm:text-xl font-bold text-purple-700">👥 Grupo Ostentação Prime</h3>
+              <p className="text-sm text-gray-600"><strong>Instituição:</strong> Centro Universitário Santo Agostinho (UNIFSA)</p>
+              <p className="text-sm text-gray-600"><strong>Localidade:</strong> Teresina - PI</p>
+              <p className="text-sm text-gray-600"><strong>Professor Orientador:</strong> Rhubens Ewald Moura Ribeiro</p>
+            </div>
+            {/* Integrantes */}
+            <div className="space-y-3">
+              <h3 className="text-lg sm:text-xl font-bold text-purple-700">✨ Integrantes do Grupo</h3>
+              <div className="grid grid-cols-2 gap-2 text-sm text-gray-700">
+                <div>• Ana Luiza</div>
+                <div>• Priscila</div>
+                <div>• David Bringel</div>
+                <div>• Marvel</div>
+                <div>• Kauã Santos</div>
+                <div>• Victor</div>
+                <div className="col-span-2">• Pedro Sales</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
   );
 }
 
