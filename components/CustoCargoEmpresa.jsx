@@ -143,12 +143,32 @@ export default function CustoCargoEmpresa() {
           </ResponsiveContainer>
         </div>
 
-        {/* Footer */}
-        <div className="bg-gray-100 rounded-xl p-6 text-center text-sm text-gray-600">
-          <p>Calculadora desenvolvida para projeto acadêmico | Valores para fins educacionais</p>
-          <p className="mt-2">Grupo Ostentação Prime - UNIFSA - Teresina, PI</p>
+        {/* Footer com Integrantes */}
+        <div className="bg-gradient-to-r from-purple-100 to-blue-100 rounded-xl p-8 text-center">
+          <h3 className="text-xl font-bold text-purple-800 mb-4">👥 Grupo Ostentacao Prime</h3>
+          <p className="text-sm text-gray-700 mb-1"><strong>Instituicao:</strong> Centro Universitario Santo Agostinho (UNIFSA)</p>
+          <p className="text-sm text-gray-700 mb-4"><strong>Localidade:</strong> Teresina - PI</p>
+          
+          <div className="bg-white rounded-lg p-4 mb-4">
+            <p className="text-sm font-bold text-purple-700 mb-2">👨‍🏫 Professor Orientador:</p>
+            <p className="text-sm text-gray-800 font-semibold">Rhubens Ewald Moura Ribeiro</p>
+          </div>
+          
+          <div className="bg-white rounded-lg p-4">
+            <p className="text-sm font-bold text-purple-700 mb-3">✨ Integrantes do Grupo:</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs text-gray-700">
+              <div className="bg-purple-50 rounded p-2">Ana Luiza</div>
+              <div className="bg-blue-50 rounded p-2">Priscila</div>
+              <div className="bg-pink-50 rounded p-2">David Bringel</div>
+              <div className="bg-green-50 rounded p-2">Marvel</div>
+              <div className="bg-yellow-50 rounded p-2">Kaua Santos</div>
+              <div className="bg-red-50 rounded p-2">Victor</div>
+              <div className="bg-indigo-50 rounded p-2 col-span-2">Pedro Sales</div>
+            </div>
+          </div>
+          
+          <p className="text-xs text-gray-600 mt-4">Calculadora desenvolvida para projeto academico | Valores para fins educacionais</p>
         </div>
-      </div>
     </div>
   );
 }
