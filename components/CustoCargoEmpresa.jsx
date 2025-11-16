@@ -61,7 +61,7 @@ const CustoCargoEmpresa = () => {
             {encargosData.length > 0 && (
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
-                  <Pie data={encargosData} cx="50%" cy="50%" label outterRadius={100} fill="#8884d8" dataKey="value">
+                  <Pie data={encargosData} cx="50%" cy="50%" label outerRadius={100} fill="#8884d8" dataKey="value">
                     {encargosData.map((entry, idx) => (
                       <Cell key={idx} fill={entry.cor} />
                     ))}
