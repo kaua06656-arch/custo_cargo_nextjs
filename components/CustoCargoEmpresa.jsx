@@ -27,12 +27,12 @@ export default function CustoCargoEmpresa() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 py-12 px-4">
       <div className="text-center mb-12">
         <h1 className="text-5xl font-bold text-slate-800">Custo do Cargo</h1>
-        <p className="text-slate-600 mt-2">Analise de Encargos</p>
+        <p className="text-slate-600 mt-2">Análise de Encargos</p>
       </div>
 
       <div className="max-w-6xl mx-auto">
         <div className="bg-white rounded-lg shadow p-6 mb-6">
-          <label className="block text-slate-700 font-semibold mb-2">Salario Base</label>
+          <label className="block text-slate-700 font-semibold mb-2">Salário Base</label>
           <input
             type="number"
             value={salario}
@@ -56,7 +56,7 @@ export default function CustoCargoEmpresa() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-2xl font-bold text-slate-800 mb-4">Composicao</h2>
+            <h2 className="text-2xl font-bold text-slate-800 mb-4">Composição</h2>
             {calculados.length > 0 && (
               <ResponsiveContainer width="100%" height={250}>
                 <PieChart>
@@ -81,7 +81,7 @@ export default function CustoCargoEmpresa() {
             <h2 className="text-2xl font-bold mb-4">Resumo</h2>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span>Salario:</span>
+                <span>Salário:</span>
                 <span className="font-bold">R$ {salario.toLocaleString('pt-BR')}</span>
               </div>
               <div className="flex justify-between">
@@ -108,7 +108,7 @@ export default function CustoCargoEmpresa() {
               { nome: 'Priscila' },
               { nome: 'David Bringel' },
               { nome: 'Marvel' },
-              { nome: 'Kaue Santos' },
+              { nome: 'Kauã Santos' },
               { nome: 'Victor' },
               { nome: 'Pedro Sales' }
             ].map((m, i) => (
@@ -125,7 +125,7 @@ export default function CustoCargoEmpresa() {
               <strong>Professor:</strong> Rhubens Ewald Moura Ribeiro
             </p>
             <p>
-              <strong>Grupo:</strong> Ostentacao Prime
+              <strong>Grupo:</strong> Ostentação Prime
             </p>
             <p>
               <strong>Local:</strong> Teresina - PI
@@ -134,8 +134,8 @@ export default function CustoCargoEmpresa() {
         </div>
 
         <div className="text-center text-slate-600 text-xs">
-          <p>Projeto academico | Analise de Custos do Cargo</p>
-          <p className="text-slate-500">Ostentacao Prime - Teresina, PI</p>
+          <p>Projeto Acadêmico | Análise de Custos do Cargo</p>
+          <p className="text-slate-500">Ostentação Prime - Teresina, PI</p>
         </div>
       </div>
     </div>
