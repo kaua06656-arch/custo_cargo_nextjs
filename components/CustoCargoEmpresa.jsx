@@ -154,19 +154,26 @@ export default function CustoCargoEmpresa() {
             <p className="text-sm text-gray-800 font-semibold">Rhubens Ewald Moura Ribeiro</p>
           </div>
           
-          <div className="bg-white rounded-lg p-4">
-            <p className="text-sm font-bold text-purple-700 mb-3">✨ Integrantes do Grupo:</p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs text-gray-700">
-              <div className="bg-purple-50 rounded p-2">Ana Luiza</div>
-              <div className="bg-blue-50 rounded p-2">Priscila</div>
-              <div className="bg-pink-50 rounded p-2">David Bringel</div>
-              <div className="bg-green-50 rounded p-2">Marvel</div>
-              <div className="bg-yellow-50 rounded p-2">Kaua Santos</div>
-              <div className="bg-red-50 rounded p-2">Victor</div>
-              <div className="bg-indigo-50 rounded p-2 col-span-2">Pedro Sales</div>
+<div className="bg-white rounded-lg p-4 mb-8">
+            <div className="mb-6">
+              <h3 className="text-lg font-bold text-purple-700 mb-4">👥 Integrantes do Grupo</h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                <div className="bg-purple-50 rounded p-2 text-sm font-medium">Ana Luiza</div>
+                <div className="bg-purple-50 rounded p-2 text-sm font-medium">Priscila</div>
+                <div className="bg-blue-50 rounded p-2 text-sm font-medium">David Bringel</div>
+                <div className="bg-pink-50 rounded p-2 text-sm font-medium">Marvel</div>
+                <div className="bg-green-50 rounded p-2 text-sm font-medium">Kauã Santos</div>
+                <div className="bg-yellow-50 rounded p-2 text-sm font-medium">Victor</div>
+                <div className="bg-red-50 rounded p-2 text-sm font-medium">Pedro Sales</div>
+              </div>
+            </div>
+            <div className="border-t border-gray-200 pt-4">
+              <p className="text-sm text-gray-700"><strong>Professor Orientador:</strong> Rhubens Ewald Moura Ribeiro</p>
+              <p className="text-sm text-gray-700 mt-2"><strong>Grupo:</strong> Ostentação Prime</p>
+              <p className="text-sm text-gray-700 mt-2"><strong>Instituição:</strong> UNIFSA - Centro Universitário Santo Agostinho</p>
+              <p className="text-sm text-gray-700 mt-2"><strong>Localização:</strong> Teresina - PI</p>
             </div>
           </div>
-          
           <p className="text-xs text-gray-600 mt-4">Calculadora desenvolvida para projeto academico | Valores para fins educacionais</p>
         </div>
     </div>
