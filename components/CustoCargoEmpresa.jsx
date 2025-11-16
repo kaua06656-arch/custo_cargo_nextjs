@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
 const ENCARGOS = [
-  { nome: 'INSS', pct: 0.20, cor: '#3b82f6' },
+  { nome: 'INSS Patronal', pct: 0.20, cor: '#3b82f6' },
   { nome: 'RAT', pct: 0.02, cor: '#8b5cf6' },
-  { nome: 'S.Educ', pct: 0.025, cor: '#6366f1' },
-  { nome: 'S.S', pct: 0.033, cor: '#0ea5e9' },
+  { nome: 'Salário Educação', pct: 0.025, cor: '#6366f1' },
+  { nome: 'INCRA/SEST/SENAT', pct: 0.033, cor: '#0ea5e9' },
   { nome: 'FGTS', pct: 0.08, cor: '#06b6d4' },
-  { nome: 'Multa', pct: 0.032, cor: '#1e40af' },
+  { nome: 'FGTS Multa (Rescisão)', pct: 0.032, cor: '#1e40af' },
 ];
 
 export default function CustoCargoEmpresa() {
@@ -27,7 +27,7 @@ export default function CustoCargoEmpresa() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 py-12 px-4">
       <div className="text-center mb-12">
         <h1 className="text-5xl font-bold text-slate-800">Custo do Cargo</h1>
-        <p className="text-slate-600 mt-2">Análise de Encargos</p>
+        <p className="text-slate-600 mt-2">Análise de Encargos - Gestor de RH</p>
       </div>
 
       <div className="max-w-6xl mx-auto">
@@ -48,7 +48,7 @@ export default function CustoCargoEmpresa() {
               className="bg-white rounded shadow p-4"
               style={{ borderLeft: `4px solid ${item.cor}` }}
             >
-              <p className="text-sm text-slate-500 uppercase">{item.name}</p>
+              <p className="text-sm text-slate-500 uppercase font-bold">{item.name}</p>
               <p className="text-lg font-bold text-slate-800">R$ {item.value.toLocaleString('pt-BR')}</p>
             </div>
           ))}
@@ -93,7 +93,7 @@ export default function CustoCargoEmpresa() {
                 <span className="font-bold">{percentualTotal}%</span>
               </div>
               <div className="bg-white bg-opacity-10 rounded p-3 mt-4">
-                <p className="text-xs text-blue-100 mb-1">TOTAL</p>
+                <p className="text-xs text-blue-100 mb-1">CUSTO TOTAL DO CARGO</p>
                 <p className="text-3xl font-bold">R$ {custoTotal.toLocaleString('pt-BR')}</p>
               </div>
             </div>
@@ -136,6 +136,7 @@ export default function CustoCargoEmpresa() {
         <div className="text-center text-slate-600 text-xs">
           <p>Projeto Acadêmico | Análise de Custos do Cargo</p>
           <p className="text-slate-500">Ostentação Prime - Teresina, PI</p>
+          <p className="text-slate-400 mt-2">Baseado em legislação trabalhista brasileira CLT 2025</p>
         </div>
       </div>
     </div>
