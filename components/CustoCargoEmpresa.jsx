@@ -1,201 +1,211 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
 const ENCARGOS = [
-  { nome: 'INSS', pct: 0.20, icone: '🏥', cor: '#6366f1' },
-  { nome: 'RAT', pct: 0.02, icone: '⚠️', cor: '#ef4444' },
-  { nome: 'S.Educ', pct: 0.025, icone: '📚', cor: '#3b82f6' },
-  { nome: 'S.S', pct: 0.033, icone: '🏢', cor: '#10b981' },
-  { nome: 'FGTS', pct: 0.08, icone: '💰', cor: '#f59e0b' },
-  { nome: 'Multa', pct: 0.032, icone: '📋', cor: '#8b5cf6' },
+  { nome: 'INSS', pct: 0.20, icone: '🏥', cor: '#3b82f6' },
+  { nome: 'RAT', pct: 0.02, icone: '⚠️', cor: '#8b5cf6' },
+  { nome: 'S.Educ', pct: 0.025, icone: '📚', cor: '#6366f1' },
+  { nome: 'S.S', pct: 0.033, icone: '🏢', cor: '#0ea5e9' },
+  { nome: 'FGTS', pct: 0.08, icone: '💰', cor: '#06b6d4' },
+  { nome: 'Multa', pct: 0.032, icone: '📋', cor: '#1e40af' },
 ];
 
-function formatarMoeda(valor) {
-  return Number(valor || 0).toLocaleString('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-  });
-}
-
-export default function CustoCargoEmpresa() {
+const CustoCargoEmpresa = () => {
   const [salario, setSalario] = useState(5000);
-  const [activeTab, setActiveTab] = useState('resumo');
+  const [encargosData, setEncargosData] = useState([]);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const sal = params.get('sal');
-    if (sal) setSalario(Number(sal));
-  }, []);
-
-  const custos = useMemo(() => {
-    const encargosTotal = ENCARGOS.reduce((acc, e) => acc + e.pct, 0);
-    const custoEncargos = salario * encargosTotal;
-    const custoFerias = (salario + custoEncargos) / 12;
-    const custo13 = (salario + custoEncargos) / 12;
-    const custoTotal = salario + custoEncargos + custoFerias + custo13;
-    return {
-      salario: Number(salario.toFixed(2)),
-      custoINSS: Number((salario * 0.2).toFixed(2)),
-      custoRAT: Number((salario * 0.02).toFixed(2)),
-      custoSalarioEduc: Number((salario * 0.025).toFixed(2)),
-      custoSistemaS: Number((salario * 0.033).toFixed(2)),
-      custoFGTS: Number((salario * 0.08).toFixed(2)),
-      custoMulta: Number((salario * 0.032).toFixed(2)),
-      custoFerias,
-      custo13,
-      custoTotal,
-      chartData: ENCARGOS.map(e => ({ nome: e.nome, value: e.pct * 100, fill: e.cor })),
-    };
+    const calculados = ENCARGOS.map((enc) => ({
+      name: enc.nome,
+      value: parseFloat((salario * enc.pct).toFixed(2)),
+      cor: enc.cor,
+    }));
+    setEncargosData(calculados);
   }, [salario]);
 
+  const totalEncargos = encargosData.reduce((acc, enc) => acc + enc.value, 0);
+  const custoTotal = salario + totalEncargos;
+  const percentualTotal = ((totalEncargos / salario) * 100).toFixed(1);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4 lg:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 py-12 px-4">
       <style>{`
         @keyframes slideInDown {
-          from { opacity: 0; transform: translateY(-30px); }
-          to { opacity: 1; transform: translateY(0); }
+          from {
+            opacity: 0;
+            transform: translateY(-30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
         @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(30px); }
-          to { opacity: 1; transform: translateY(0); }
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
-        @keyframes pulse-glow {
-          0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.3); }
-          50% { box-shadow: 0 0 30px rgba(99, 102, 241, 0.6); }
+        .animate-slide {
+          animation: slideInDown 0.6s ease-out;
         }
-        @keyframes shimmer {
-          0% { background-position: -1000px 0; }
-          100% { background-position: 1000px 0; }
+        .animate-fade {
+          animation: fadeInUp 0.6s ease-out;
         }
-        .animate-slide-in-down { animation: slideInDown 0.6s ease-out; }
-        .animate-fade-in-up { animation: fadeInUp 0.6s ease-out; }
-        .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
-        .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); }
       `}</style>
 
+      {/* Header */}
+      <div className="text-center mb-12 animate-slide">
+        <h1 className="text-5xl font-bold text-slate-800 mb-2">Custo do Cargo</h1>
+        <p className="text-lg text-slate-600">Análise de Encargos Trabalhistas</p>
+        <div className="w-32 h-1 bg-gradient-to-r from-blue-500 to-slate-400 mx-auto mt-4"></div>
+      </div>
+
+      {/* Main Container */}
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="animate-slide-in-down mb-12 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-purple-300 via-blue-300 to-purple-300 bg-clip-text text-transparent mb-3">Custo do Cargo</h1>
-          <p className="text-gray-300 text-lg">Calculadora profissional de encargos trabalhistas</p>
-          <div className="h-1 w-24 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full mx-auto mt-4"></div>
+        {/* Input Section */}
+        <div className="bg-white rounded-lg shadow-md p-8 mb-8 animate-fade">
+          <label className="block text-slate-700 font-semibold mb-3">Salário Base (R$)</label>
+          <input
+            type="number"
+            value={salario}
+            onChange={(e) => setSalario(parseFloat(e.target.value) || 0)}
+            className="w-full px-4 py-3 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-500 text-lg font-semibold text-slate-800"
+            aria-label="Digite o salário"
+          />
         </div>
 
-        {/* Salary Input */}
-        <div className="animate-fade-in-up mb-12 delay-100">
-          <div className="bg-white/5 backdrop-blur-md border border-purple-500/20 rounded-2xl p-8 card-hover">
-            <label className="block text-sm font-semibold text-gray-300 mb-3">Salário Base (R$)</label>
-            <input 
-              type="number" 
-              value={salario} 
-              onChange={(e) => setSalario(Number(e.target.value))} 
-              placeholder="Digite o salário" 
-              className="w-full bg-white/10 border border-purple-400/30 rounded-xl p-4 text-xl font-bold text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/20 transition-all" 
-            />
-          </div>
-        </div>
-
-        {/* Encargos Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
-          {ENCARGOS.map((enc, idx) => (
-            <div key={enc.nome} className="animate-fade-in-up card-hover" style={{ animationDelay: `${(idx + 1) * 100}ms` }}>
-              <div className={`bg-white/5 backdrop-blur-md border border-purple-500/20 rounded-xl p-6 h-full`}>
-                <p className="text-3xl mb-2">{enc.icone}</p>
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">{enc.nome}</p>
-                <p className="text-2xl font-bold bg-gradient-to-r from-purple-300 to-blue-300 bg-clip-text text-transparent">{formatarMoeda(custos['custo' + enc.nome.replace('.', '')] || 0)}</p>
+        {/* Encargos Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 animate-fade" style={{ animationDelay: '0.1s' }}>
+          {ENCARGOS.map((encargoInfo, idx) => {
+            const encargo = encargosData[idx];
+            return (
+              <div
+                key={encargoInfo.nome}
+                className="bg-white rounded-lg shadow-md p-6 border-l-4"
+                style={{ borderLeftColor: encargoInfo.cor }}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-3xl">{encargoInfo.icone}</span>
+                  <span className="text-sm font-semibold text-slate-500 uppercase">{encargoInfo.nome}</span>
+                </div>
+                <p className="text-2xl font-bold text-slate-800">R$ {encargo.value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+                <p className="text-xs text-slate-500 mt-2">{(encargoInfo.pct * 100).toFixed(1)}%</p>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
-        {/* Main Content Grid */}
-        <div className="grid lg:grid-cols-2 gap-8 mb-12">
-          {/* Cost Composition */}
-          <div className="animate-fade-in-up card-hover">
-            <div className="bg-white/5 backdrop-blur-md border border-purple-500/20 rounded-2xl p-8 h-full">
-              <h2 className="text-2xl font-bold text-white mb-6">Composição do Custo</h2>
+        {/* Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          {/* Chart Section */}
+          <div className="bg-white rounded-lg shadow-md p-8 animate-fade" style={{ animationDelay: '0.2s' }}>
+            <h2 className="text-2xl font-bold text-slate-800 mb-6">Composição do Custo</h2>
+            {encargosData.length > 0 && (
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
-                  <Pie data={custos.chartData} cx="50%" cy="50%" labelLine={false} label={({ nome, value }) => `${value.toFixed(1)}%`} outerRadius={80} dataKey="value" fill="#8b5cf6">
-                    {custos.chartData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
+                  <Pie
+                    data={encargosData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, value }) => `${name}: ${((value / custoTotal) * 100).toFixed(1)}%`}
+                    outerRadius={100}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {encargosData.map((entry, idx) => (
+                      <Cell key={`cell-${idx}`} fill={entry.cor} />
+                    ))}
                   </Pie>
                 </PieChart>
               </ResponsiveContainer>
-            </div>
+            )}
           </div>
 
-          {/* Cost Summary */}
-          <div className="animate-fade-in-up card-hover" style={{ animationDelay: '200ms' }}>
-            <div className="bg-white/5 backdrop-blur-md border border-purple-500/20 rounded-2xl p-8 h-full">
-              <h2 className="text-2xl font-bold text-white mb-6">Resumo do Custo</h2>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center pb-3 border-b border-purple-500/20">
-                  <span className="text-gray-300">Salário</span>
-                  <span className="text-lg font-bold text-purple-300">{formatarMoeda(custos.salario)}</span>
-                </div>
-                <div className="flex justify-between items-center pb-3 border-b border-purple-500/20">
-                  <span className="text-gray-300">Encargos Totais</span>
-                  <span className="text-lg font-bold text-blue-300">{formatarMoeda(custos.custoINSS + custos.custoRAT + custos.custoSalarioEduc + custos.custoSistemaS + custos.custoFGTS + custos.custoMulta)}</span>
-                </div>
-                <div className="flex justify-between items-center pb-3 border-b border-purple-500/20">
-                  <span className="text-gray-300">13º + Férias</span>
-                  <span className="text-lg font-bold text-green-300">{formatarMoeda(custos.custo13 + custos.custoFerias)}</span>
-                </div>
-                <div className="flex justify-between items-center pt-3 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-lg p-3">
-                  <span className="text-white font-bold">TOTAL MENSAL</span>
-                  <span className="text-2xl font-bold bg-gradient-to-r from-purple-300 to-blue-300 bg-clip-text text-transparent">{formatarMoeda(custos.custoTotal)}</span>
-                </div>
+          {/* Summary Section */}
+          <div className="bg-gradient-to-br from-blue-500 to-slate-700 rounded-lg shadow-lg p-8 text-white animate-fade" style={{ animationDelay: '0.3s' }}>
+            <h2 className="text-2xl font-bold mb-6">Resumo do Custo</h2>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center border-b border-white border-opacity-20 pb-4">
+                <span className="text-lg">Salário Base:</span>
+                <span className="text-2xl font-bold">R$ {salario.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+              </div>
+              <div className="flex justify-between items-center border-b border-white border-opacity-20 pb-4">
+                <span className="text-lg">Encargos Totais:</span>
+                <span className="text-2xl font-bold">R$ {totalEncargos.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+              </div>
+              <div className="flex justify-between items-center pb-4">
+                <span className="text-lg">% de Encargos:</span>
+                <span className="text-2xl font-bold">{percentualTotal}%</span>
+              </div>
+              <div className="bg-white bg-opacity-10 rounded-lg p-4 mt-6">
+                <p className="text-sm text-blue-100 mb-2">CUSTO TOTAL DO CARGO</p>
+                <p className="text-4xl font-bold">R$ {custoTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Group Information */}
-        <div className="animate-fade-in-up card-hover" style={{ animationDelay: '400ms' }}>
-          <div className="bg-white/5 backdrop-blur-md border border-purple-500/20 rounded-2xl p-8">
-            <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">👥 Integrantes do Grupo</h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-8">
-              {['Ana Luiza', 'Priscila', 'David Bringel', 'Marvel', 'Kauã Santos', 'Victor', 'Pedro Sales'].map((name, idx) => (
-                <div key={name} className="bg-gradient-to-br from-purple-500/20 to-blue-500/20 border border-purple-400/30 rounded-lg p-3 text-center hover:from-purple-500/30 hover:to-blue-500/30 transition-all" style={{ animationDelay: `${(idx + 5) * 50}ms` }}>
-                  <p className="text-sm font-semibold text-white">{name}</p>
-                </div>
-              ))}
+        {/* Group Members Section */}
+        <div className="bg-white rounded-lg shadow-md p-8 mb-8 animate-fade" style={{ animationDelay: '0.4s' }}>
+          <h2 className="text-2xl font-bold text-slate-800 mb-8 flex items-center">
+            <span className="text-3xl mr-3">👥</span>
+            Integrantes do Grupo
+          </h2>
+
+          {/* Members Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
+            {[
+              { nome: 'Ana Luiza', cor: '#e0e7ff' },
+              { nome: 'Priscila', cor: '#dbeafe' },
+              { nome: 'David Bringel', cor: '#e0f2fe' },
+              { nome: 'Marvel', cor: '#f0f9ff' },
+              { nome: 'Kauã Santos', cor: '#dbeafe' },
+              { nome: 'Victor', cor: '#e0e7ff' },
+              { nome: 'Pedro Sales', cor: '#f3e8ff' },
+            ].map((membro, idx) => (
+              <div
+                key={idx}
+                className="rounded-lg p-4 text-center font-semibold text-slate-700 shadow-sm border border-slate-200 hover:shadow-md transition-shadow"
+                style={{ backgroundColor: membro.cor }}
+              >
+                {membro.nome}
+              </div>
+            ))}
+          </div>
+
+          {/* Group Info */}
+          <div className="border-t-2 border-slate-200 pt-6 space-y-3">
+            <div className="flex items-start">
+              <span className="font-semibold text-slate-700 mr-3">👨‍🏫 Professor Orientador:</span>
+              <span className="text-slate-600">Rhubens Ewald Moura Ribeiro</span>
             </div>
-            <div className="border-t border-purple-500/20 pt-6 space-y-3">
-              <div className="flex items-start gap-3">
-                <span className="text-purple-400 font-bold">👨‍🎓</span>
-                <div>
-                  <p className="text-xs text-gray-400 uppercase tracking-wider">Professor Orientador</p>
-                  <p className="text-white font-semibold">Rhubens Ewald Moura Ribeiro</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="text-blue-400 font-bold">🎯</span>
-                <div>
-                  <p className="text-xs text-gray-400 uppercase tracking-wider">Grupo / Instituição</p>
-                  <p className="text-white font-semibold">Ostentação Prime / UNIFSA</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="text-green-400 font-bold">📍</span>
-                <div>
-                  <p className="text-xs text-gray-400 uppercase tracking-wider">Localização</p>
-                  <p className="text-white font-semibold">Teresina, Piauí - Brasil</p>
-                </div>
-              </div>
+            <div className="flex items-start">
+              <span className="font-semibold text-slate-700 mr-3">📋 Grupo:</span>
+              <span className="text-slate-600">Ostentação Prime</span>
+            </div>
+            <div className="flex items-start">
+              <span className="font-semibold text-slate-700 mr-3">📍 Localização:</span>
+              <span className="text-slate-600">Teresina - PI</span>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Footer */}
-        <div className="mt-12 text-center pb-8">
-          <p className="text-sm text-gray-400">Calculadora desenvolvida para projeto acadêmico</p>
-          <p className="text-xs text-gray-500 mt-1">Valores para fins educacionais • © 2025 Grupo Ostentação Prime</p>
-        </div>
+      {/* Footer */}
+      <div className="text-center mt-12 pb-8 text-slate-600 text-sm animate-fade" style={{ animationDelay: '0.5s' }}>
+        <p className="mb-2">Projeto acadêmico | Análise de Custos do Cargo para fins educacionais</p>
+        <p className="text-slate-500">Ostentação Prime - Teresina, PI</p>
       </div>
     </div>
   );
-}
+};
+
+export default CustoCargoEmpresa;
